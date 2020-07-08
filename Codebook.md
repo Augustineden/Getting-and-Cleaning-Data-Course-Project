@@ -20,7 +20,7 @@ tBodyGyroJerkMag).
 
 A Fast Fourier Transform (FFT) was applied to some of these signals producing 
 fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, 
-fBodyGyroJerkMag. (Note the 'f' to indicate frequency domain signals). 
+fBodyGyroJerkMag. (these have been given a 'frequency' label by run_analysis.R). 
 
 run_analysis.R splits each feature into domain and dimension components, thus
 simplifying the list of featres into:
