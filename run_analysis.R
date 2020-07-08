@@ -1,14 +1,6 @@
 library(dplyr)
 library(tidyr)
 
-setwd("/Users/augustineden/RProgramming")
-
-if (!file.exists("gcd_project")) {
-        dir.create("gcd_project")
-}
-
-setwd("gcd_project")
-
 fileURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 download.file(fileURL, destfile = "projectfiles.zip")
 dateDownloaded <- date()
