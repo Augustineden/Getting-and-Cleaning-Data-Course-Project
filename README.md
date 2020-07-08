@@ -1,6 +1,14 @@
-# Creating a Tidy Data Set from Raw Experimental Data"
+# Creating a Tidy Data Set from Raw Experimental Data
 
-This project uses data collected from a group of 30 volunteers. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING), wearing a smartphone (Samsung Galaxy S II) on the waist.
+This project uses data collected from a group of 30 volunteers. Each person performed the following six activities while wearing a smartphone (Samsung Galaxy S II) on the waist:
+
+WALKING 
+WALKING_UPSTAIRS
+WALKING_DOWNSTAIRS
+SITTING 
+STANDING
+LAYING
+
 Using its embedded accelerometer and gyroscope, a large number of features of 3-axial linear acceleration and 3-axial angular velocity were captured at a constant rate of 50Hz. The obtained dataset was randomly partitioned into two sets, where 70% of the volunteers was selected for generating the training data and 30% the test data.
 
 The code in run_analysis.R takes several raw data files from this experiment, and uses them to produce 2 tidy data sets - one main data set and one summary data set.
