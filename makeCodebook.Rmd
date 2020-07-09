@@ -1,0 +1,46 @@
+---
+title: "Codebook"
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Codebook
+
+Codebook created on `r as.character(Sys.time())`
+
+List of variables in summary_means.txt dataset
+
+```{r }
+names(tidySummary)
+```
+
+------------------------------
+
+Variable name    | Description
+-----------------|------------
+subject          | participant ID - numeric between 1 and 30
+activity         | activity name
+domain           | indicates time or frequency domain
+dimension        | 3-axial dimension component (x, y, z)
+component        | acceleration component measured (body or gravity)
+instrument       | instrument making measurement (accelerometer or gyroscope)
+jerk             | indicates jerk measurement
+magnitude        | indicates magnitude measurement
+statistic        | indicates mean or standard deviation calculation
+count            | number of observations used to calculate mean_value
+mean_value       | mean value calculated for each observation
+
+The dataset summary_means.txt is created by the run_analysis.R code and has the 
+following structure:
+
+```{r }
+str(tidySummary, max.level = 2)
+```
+
+First few rows of the dataset:
+
+```{r }
+as_tibble(tidySummary)
+```
