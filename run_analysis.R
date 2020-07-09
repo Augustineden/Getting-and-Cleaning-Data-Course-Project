@@ -1,12 +1,12 @@
 library(dplyr)
 library(tidyr)
+library(knitr)
 
-setwd("/Users/augustineden/RProgramming")
+setwd("/Users/augustineden/RProgramming/gcd_project")
+
 if (!file.exists("gcd_project")) {
         dir.create("gcd_project")
 }
-
-setwd("gcd_project")
 
 
 fileURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
@@ -123,3 +123,5 @@ tidySummary <- tidyData %>% select(c(activity:domain, dimension, instrument:valu
 
 write.csv(tidyData, "tidy_data.txt")
 write.csv(tidySummary, "summary_means.txt")
+
+knit("makeCodebook.Rmd", output = "codebook.md", encoding = "ISO8859-1", quiet = TRUE)
