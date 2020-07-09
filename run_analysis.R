@@ -1,6 +1,14 @@
 library(dplyr)
 library(tidyr)
 
+setwd("/Users/augustineden/RProgramming")
+if (!file.exists("gcd_project")) {
+        dir.create("gcd_project")
+}
+
+setwd("gcd_project")
+
+
 fileURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 download.file(fileURL, destfile = "projectfiles.zip")
 dateDownloaded <- date()
@@ -12,7 +20,7 @@ file.rename("UCI HAR Dataset", "uci_data") # Rename the folder containing the da
 #### for readability. This will become the vector of column names.
 
 varNames <- read.table("uci_data/features.txt", sep = "") 
-columnNames <- make.names(varNames[, 2], unique = TRUE)
+columnNames <- make.names(varNames[, 2], unique = TRUE) # remove illegal characters from varNames
 replaceDots<-function(x){ # function replaces periods with underscores, then tidies up the underscores
         x <- gsub("\\.", "_", x)
         x <- gsub("___", "_", x)
@@ -21,7 +29,7 @@ replaceDots<-function(x){ # function replaces periods with underscores, then tid
 }
 columnNames <- replaceDots(columnNames)
 
-#### The activity_labels.txt file is read in, which allows us to identify the 
+#### The activity_labels.txt file is read in, which allows us to identify the
 #### activities in the main data sets. This will be used later.
 
 activityLabels <- read.table("uci_data/activity_labels.txt", sep= "") 
@@ -74,22 +82,44 @@ mergedData <- mergedData %>% select(-(activity_label))
 #### satisfy the 3 tennets of tidy data. This step also labels each column with a descriptive name
 #### which fulfills step 4 of the project instructions.
 
-tidyData <- mergedData %>% pivot_longer(-(activity:subject), names_to = "feature", 
-        values_to = "magnitude", values_drop_na = TRUE) %>%
+Data <- mergedData %>% pivot_longer(-(activity:subject), names_to = "feature", 
+        values_to = "value", values_drop_na = TRUE) %>%
         separate(feature, c("domain", "feature"), 1) %>% # separate feature from domain (time, frequency)
-        separate(feature, c("feature", "measurement"), "_", extra = "merge") %>%
-        separate(measurement, c("measurement", "dimension"), "_", extra = "drop")
+        separate(feature, c("feature", "statistic"), "_", extra = "merge") %>%
+        separate(statistic, c("statistic", "dimension"), "_", extra = "drop")
+
+findMe <- function(x) { # further separation relies upon searching for keywords in feature column
+        grepl(x, Data$feature)
+}
+
+n <- 2
+y <- matrix(seq(1, n), nrow = n)
+
+x <- matrix(c(findMe("Acc"), findMe("Gyro")), ncol = nrow(y))
+Data$instrument <- factor(x %*% y, labels = c("accelerometer", "gyroscope"))
+
+x <- matrix(c(findMe("BodyAcc"), findMe("GravityAcc")), ncol = nrow(y))
+Data$component <- factor(x %*% y, labels = c(NA, "body", "gravity"))
+
+Data$jerk <- factor(findMe("Jerk"), labels = c(NA, "jerk"))
+
+Data$magnitude <- factor(findMe("Mag"), labels = c(NA, "magnitude"))
 
 #### Assign names to the domain column where t = time and f = frequency
 
-tidyData$domain <- gsub("t", "time", tidyData$domain)
-tidyData$domain <- gsub("f", "frequency", tidyData$domain)
+Data$domain <- gsub("t", "time", Data$domain)
+Data$domain <- gsub("f", "frequency", Data$domain)
+Data <- Data %>% mutate_if(is.character, as.factor)
+Data$subject <- as.factor(Data$subject)
 
 #### Finally, create a second, independent tidy data set giving the mean of each feature,
 #### grouped by activity and subject.
 
-summary <- tidyData %>% group_by(activity, feature, subject) %>%
-  summarize(mean_magnitude = mean(magnitude))
+tidyData <- Data %>% select(c(activity:domain, dimension, instrument:magnitude, statistic, value))
+tidySummary <- tidyData %>% select(c(activity:domain, dimension, instrument:value)) %>% 
+  group_by(subject, activity, domain, dimension, component, instrument, jerk, 
+           magnitude, statistic) %>%
+  summarize(count = n(), mean_value = mean(value))
 
-write.csv(tidyData, "tidy_data.csv")
-write.csv(summary, "summary_means.csv")
+write.csv(tidyData, "tidy_data.txt")
+write.csv(tidySummary, "summary_means.txt")
