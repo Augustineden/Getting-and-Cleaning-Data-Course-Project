@@ -121,7 +121,7 @@ tidySummary <- tidyData %>% select(c(activity:domain, dimension, instrument:valu
            magnitude, statistic) %>%
   summarize(count = n(), mean_value = mean(value))
 
-write.csv(tidyData, "tidy_data.txt")
-write.csv(tidySummary, "summary_means.txt")
+write.table(tidyData, "tidy_data.txt", row.name = FALSE)
+write.table(tidySummary, "summary_means.txt", row.name = FALSE)
 
 knit("makeCodebook.Rmd", output = "codebook.md", encoding = "ISO8859-1", quiet = TRUE)
